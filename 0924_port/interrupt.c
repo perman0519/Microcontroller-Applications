@@ -5,14 +5,11 @@
 *  Author: junssong
 */
 
-#include <avr/io.h>
-#define FOCS 16000000UL
 #define F_CPU 16000000UL
+#define FOCS 16000000UL
+#include <avr/io.h>
 #include <util/delay.h>
-
 #include <avr/interrupt.h>
-
-
 
 void my_delay(int _ms) {
 	for (int i = 0; i < _ms; i++) {
@@ -20,101 +17,63 @@ void my_delay(int _ms) {
 	}
 }
 
-void led_all_onoff_alternating2(int count, int _ms, int onbyte) {
-	for (int i = 0 ; i < count; i++) {
-		PORTD = ~onbyte;
-		my_delay(_ms);
-		PORTD = ~onbyte;
-		my_delay(_ms);
+volatile uint8_t current_pattern_A = 0xFF; // 초기 패턴 A (0xAA)
+volatile uint8_t current_pattern_B = 0x00; // 초기 패턴 B (0x55)
+
+enum e_status {
+	INT00,
+	INT01
+};
+
+volatile enum e_status status = INT0;
+
+void led_shift(int delay)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		if (status != INT01) return;
+		PORTC = (~(0x01 << i)) & 0x0f;
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
 	}
+	for (int i = 6; i >= 1; i--)
+	{
+		if (status != INT01) return;
+		PORTC = (~(0x01 << i)) & 0x0f;
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
+	}
+	PORTC = (PORTC & 0xf0) | 0x0f;
+	PORTD = (PORTD & 0x0f) | 0xf0;
 }
 
-void led_all_onoff_alternating3(int count, int _ms, int onbyte) {
-	for (int i = 0 ; i < count; i++) {
-		PORTC = ~onbyte;
-		my_delay(_ms);
-		PORTC = ~onbyte;
-		my_delay(_ms);
-	}
+
+
+void led_alternating(int delay) {
+	if (status != INT00) return;
+	PORTC = ((PORTC & 0xF0) | (current_pattern_A & 0x0F));
+	PORTD = ((PORTD & 0x0F) | (current_pattern_A & 0xF0));
+	my_delay(delay);
+	if (status != INT00) return;
+	PORTC = ((PORTC & 0xF0) | (current_pattern_B & 0x0F));
+	PORTD = ((PORTD & 0x0F) | (current_pattern_B & 0xF0));
+	my_delay(delay);
 }
 
-void led_shift(int count) {
-	int c = 2;
-	PORTC = 0x1e;
-	PORTD = 0xff;
-	while (c--) {
-		for (unsigned i = 0x02; i < 0x20; ) {
-			led_all_onoff_alternating3(1, 50, i);
-			i = i << 1;
-		}
-		PORTC = 0x1e;
-		int t = 4;
-		unsigned i = 0x10;
-		while (t--) {
-			led_all_onoff_alternating2(1, 50, i);
-			i = i << 1;
-		}
-		PORTD = 0xf0;
-		t = 4;
-		i = 0x80;
-		while (t--) {
-			led_all_onoff_alternating2(1, 50, i);
-			i = i >> 1;
-		}
-		PORTD = 0xf0;
-		t = 4;
-		i = 0x10;
-		while (t--) {
-			led_all_onoff_alternating3(1, 50, i);
-			i = i >> 1;
-		}
-		PORTC = 0x1e;
-	}
-	PORTC = 0x1e;
-	PORTD = 0xff;
-}
-
-void led_all_alternating(int count, int _ms, int portc, int portd) {
-	for (int i = 0 ; i < count; i++) {
-		PORTC = portc;
-		PORTD = portd;
-		my_delay(_ms);
-		PORTC = ~portc;
-		PORTD = ~portd;
-		my_delay(_ms);
-	}
-}
 
 ISR(INT0_vect)
 {
-	led_shift(2);
-	//_delay_ms(15);
-	//if (PIND & 0x04) return;
-	//
-	//cli();
-	//EIFR |= 0x01;
-	//sei();
-	//
-	//for (int j = 0; j < 2; j++) {
-		//for (int i = 0; i < 8; i++) {
-			//PORTC = (~(0x01 << i)) & 0x0f;
-			//PORTD = (~(0x01 << i)) & 0xf0;
-			//_delay_ms(100);
-		//}
-		//
-		//for (int i = 6; i >= 0; i--) {
-			//PORTC = ~((0x01 << i)) & 0x0f;
-			//PORTD = ~((0x01 << i)) & 0xf0;
-			//_delay_ms(100);
-		//}
-		//
-		//PORTD = (PORTD & 0x0f) | 0xf0;
-		//PORTC = (PORTC & 0x0f) | 0xf0;
-		//_delay_ms(100);
-	//}	
+	_delay_ms(15);
+	if (PIND & 0x04) return;
+	
+	cli();
+	EIFR |= 0x01;
+	sei();
+	
+	status = INT00;
 }
 
-ISR(INT0_vect)
+ISR(INT1_vect)
 {
 	_delay_ms(15);
 	if (PIND & 0x08) return;
@@ -123,9 +82,9 @@ ISR(INT0_vect)
 	EIFR |= 0x01;
 	sei();
 	
-	led_all_alternating(2, 100, 0xfa, 0xaf);
-	
+	status = INT01;
 }
+
 
 int main() {
 	DDRD = 0xf0;
@@ -135,20 +94,24 @@ int main() {
 	
 	// --- external interrupt setting ---
 	// INTO: PD2 falling edge , INT1: PD3 falling edge
-	EICRA = 0x0A;
-	EIFR  = 0x03;  //
-	EIMSK = 0x03;
+	EICRA = 0x0A; // 0000 1010
+	EIFR  = 0x03; // 0000 0011
+	EIMSK = 0x03; // 0000 0011
 	
 	sei();
-	
 	_delay_ms(20);
 	
 	while(1) {
-		PORTD = ~0xAF;
-		PORTC = ~0xFA;
-		_delay_ms(500);
-		PORTD = ~0x5F;
-		PORTC = ~0xF5;
-		_delay_ms(500);
+		switch (status)
+		{
+		case INT00:
+			led_alternating(100);
+			break;
+		case INT01:
+			led_shift(100);
+			break;
+		default:
+			break;
+		}
 	}
 }

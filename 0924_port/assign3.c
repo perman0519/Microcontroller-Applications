@@ -168,12 +168,19 @@ void my_delay(int _ms) {
 
 // SW1 (PD2/INT0) ISR: 패턴 0xF0/0x0F로 변경
 ISR(INT0_vect) {
+    cli();
+    EIFR |= 0x01;
+    sei();
     current_pattern_A = 0xF0;
     current_pattern_B = 0x0F;
 }
 
 // SW2 (PD3/INT1) ISR: 패턴 0xC3/0x3C로 변경
 ISR(INT1_vect) {
+
+    cli();
+    EIFR |= 0x02;
+    sei();
     current_pattern_A = 0xC3;
     current_pattern_B = 0x3C;
 }

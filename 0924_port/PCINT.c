@@ -1,15 +1,13 @@
-
 /*
- * PCINT.c
- *
- * Created: 10/15/2025 1:43:47 PM
- *  Author: junssong
- */ 
+* interrupt.c
+*
+* Created: 10/14/2025 2:07:14 PM
+*  Author: junssong
+*/
 
-
-#include <avr/io.h>
-#define FOCS 16000000UL
 #define F_CPU 16000000UL
+#define FOCS 16000000UL
+#include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
@@ -19,156 +17,138 @@ void my_delay(int _ms) {
 	}
 }
 
-void led_all_onoff_alternating2(int count, int _ms, int onbyte) {
-	for (int i = 0 ; i < count; i++) {
-		PORTD = ~onbyte;
-		my_delay(_ms);
-		PORTD = ~onbyte;
-		my_delay(_ms);
-	}
-}
+volatile uint8_t current_pattern_A = 0xFF; // 초기 패턴 A (0xAA)
+volatile uint8_t current_pattern_B = 0x00; // 초기 패턴 B (0x55)
 
-void led_all_onoff_alternating3(int count, int _ms, int onbyte) {
-	for (int i = 0 ; i < count; i++) {
-		PORTC = ~onbyte;
-		my_delay(_ms);
-		PORTC = ~onbyte;
-		my_delay(_ms);
-	}
-}
 
-void led_shift(int count) {
-	int c = 2;
-	PORTC = 0x1e;
-	PORTD = 0xff;
-	while (c--) {
-		for (unsigned i = 0x02; i < 0x20;) {
-			led_all_onoff_alternating3(1, 50, i);
-			i = i << 1;
-		}
-		PORTC = 0x1e;
-		int t = 4;
-		unsigned i = 0x10;
-		while (t--) {
-			led_all_onoff_alternating2(1, 50, i);
-			i = i << 1;
-		}
-		PORTD = 0xf0;
-		t = 4;
-		i = 0x80;
-		while (t--) {
-			led_all_onoff_alternating2(1, 50, i);
-			i = i >> 1;
-		}
-		PORTD = 0xf0;
-		t = 4;
-		i = 0x10;
-		while (t--) {
-			led_all_onoff_alternating3(1, 50, i);
-			i = i >> 1;
-		}
-		PORTC = 0x1e;
-	}
-	PORTC = 0x1e;
-	PORTD = 0xff;
-}
+volatile unsigned char last_portb_state;
 
-void led_all_onoff(int count, int _ms) {
-	for (int i = 0 ; i < count; i++) {
-		PORTC = 0xff;
-		PORTD = 0xf0;
-		my_delay(_ms);
-		PORTC = ~0xff;
-		PORTD = ~0xf0;
-		my_delay(_ms);
-	}
-}
+enum e_status {
+	SW0,
+	SW1
+};
 
-ISR(PCINT0_vect)
+volatile enum e_status status = INT0;
+
+void led_shift(int delay)
 {
-	
+	for (int i = 0; i < 8; i++)
+	{
+		if (status != SW1) return;
+		PORTC = (~(0x01 << i)) & 0x0f;
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
+	}
+	for (int i = 6; i >= 1; i--)
+	{
+		if (status != SW1) return;
+		PORTC = (~(0x01 << i)) & 0x0f;
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
+	}
+	PORTC = (PORTC & 0xf0) | 0x0f;
+	PORTD = (PORTD & 0x0f) | 0xf0;
+}
+
+
+
+void led_alternating(int delay) {
+	if (status != SW0) return;
+	PORTC = ((PORTC & 0xF0) | (current_pattern_A & 0x0F));
+	PORTD = ((PORTD & 0x0F) | (current_pattern_A & 0xF0));
+	my_delay(delay);
+	if (status != SW0) return;
+	PORTC = ((PORTC & 0xF0) | (current_pattern_B & 0x0F));
+	PORTD = ((PORTD & 0x0F) | (current_pattern_B & 0xF0));
+	my_delay(delay);
+}
+
+
+ISR(INT0_vect)
+{
+	_delay_ms(15);
+	if (PIND & 0x04) return;
 	
 	cli();
-	PCIFR |= 0x01;
+	EIFR |= 0x01;
 	sei();
 	
-	_delay_ms(15);
-	
-	unsigned char now_b = PINB;
-	
-	if ((now_b & 0x01) == 0) {
-		for (int j = 0; j < 2; j++) {
-			for (int i = 0; i < 8; i++) {
-				unsigned char mask = (unsigned char)(0x01 << i);
-				
-				PORTC = (PORTC & 0xf0) | (unsigned char)((~mask) & 0x0f);
-				PORTD = (PORTD & 0x0f) | (unsigned char)((~mask) & 0xf0);
-				_delay_ms(100);
-			}
-			
-			for (int i = 6; i >= 0; i--) {
-				PORTC = ~((0x01 << i)) & 0x0f;
-				PORTD = ~((0x01 << i)) & 0xf0;
-				_delay_ms(100);
-			}
-			//for (int i = 6; i >= 0; i--) {
-				//unsigned char mask = (unsigned char)(0x01 << i);
-				//
-				//PORTC = (PORTC & 0xf0) | (unsigned char)((~mask) & 0x0f);
-				//PORTD = (PORTD & 0x0f) | (unsigned char)((~mask) & 0xf0);
-				//_delay_ms(100);
-			//}
-			PORTD = (PORTD & 0x0f) | 0xf0;
-			PORTC = (PORTC & 0xf0) | 0x0f;
-			_delay_ms(100);
-		}
-	}
-	if ((now_b & 0x02) == 0) {
-		for (int k = 0; k < 3; k++) {
-			PORTD = (PORTD & 0x0f) | 0x00;
-			PORTC = (PORTC & 0xf0) | 0x00;
-			_delay_ms(500);
-			PORTD = (PORTD & 0x0f) | 0xf0;
-			PORTC = (PORTC & 0xf0) | 0x0f;
-			_delay_ms(500);
-		}
-	}
+	status = SW0;
 }
 
-ISR(PCINT1_vect)
+ISR(INT1_vect)
 {
-	//_delay_ms(55);
-	led_all_onoff(3, 300);
-	//EIFR = 0x00;
+	_delay_ms(15);
+	if (PIND & 0x08) return;
+	
+	cli();
+	EIFR |= 0x01;
+	sei();
+	
+	status = SW1;
+}
+
+// SW3(PB0/PCINT0) 및 SW4(PB1/PCINT1) 공통 ISR
+ISR(PCINT0_vect) {
+    unsigned char current_portb_state = PINB;
+    
+    // SW3 (PB0/PCINT0) 체크 - 하강 에지 감지 (Default 패턴: 0xAA/0x55)
+    // 현재 Low(0)이고, 이전이 High(1)일 때 (버튼 눌림)
+    if ( !(current_portb_state & (1 << PB0)) && (last_portb_state & (1 << PB0)) ) {
+        status = SW0;
+    }
+    
+    // SW4 (PB1/PCINT1) 체크 - 하강 에지 감지 (주기 조절)
+    if ( !(current_portb_state & (1 << PB1)) && (last_portb_state & (1 << PB1)) ) {
+        status = SW1;
+    }
+    // 다음 인터럽트 감지를 위해 현재 상태를 이전 상태로 저장
+    last_portb_state = current_portb_state;
 }
 
 int main() {
-	DDRD = (DDRD & 0x0f) | 0xf0;
-	DDRC = (DDRC & 0xf0) | 0x0f;
-	
-	//DDRB &= (unsigned char)~0x03;
-	DDRB &= (unsigned char)~0x03; //0b00000011
-	
-	PORTD = (PORTD & 0x0f) | 0xf0;
-	PORTC = (PORTC & 0xf0) | 0x0f;
-	
-	_delay_ms(20);
+	DDRC = 0x0f;
+	DDRD = 0xf0;
+	PORTC = 0x0f;
+	PORTD = 0xf0;
 
-	PCIFR  |= 0x01; //00000001
-	PCMSK0 |= 0x03; //00000011
-	PCICR  |= 0x01; //00000001	
-	//PCIFR  |= (1 << PCIF0); //0000 0001
-	//PCMSK0 |= (1 << PCINT0); //0000 0011
-	//PCICR  |= (1 << PCIE0); //0000 0001
+
+    DDRD &= ~0x0C; // 0x0C (0b00001100): SW1(PD2), SW2(PD3) 입력
+    DDRB &= ~0x03; // 0x03 (0b00000011): SW3(PB0), SW4(PB1) 입력
+
+    PORTD |= 0x0C; // 0x0C: SW1(PD2), SW2(PD3) 풀업 활성화
+    PORTB |= 0x03; // 0x03: SW3(PB0), SW4(PB1) 풀업 활성화
 	
+	// --- external interrupt setting ---
+	// INTO: PD2 falling edge , INT1: PD3 falling edge
+	// EICRA = 0x0A; // 0000 1010
+	// EIFR  = 0x03; // 0000 0011
+	// EIMSK = 0x03; // 0000 0011
+
+
+    // 4. 핀 변화 인터럽트 (PCINT0, PCINT1) 설정 - SW3, SW4
+    // 0x01 (0b00000001): PCIE0 비트 설정 -> PORT B 그룹 활성화
+    PCICR = 0x01;
+    // 0x03 (0b00000011): PB0, PB1 핀 변화 감지 마스크 설정
+    PCMSK0 = 0x03;
+    // 0x01 (0b00000001): PCIF0 플래그 Clear (초기 오동작 방지)
+    PCIFR = 0x01;
+
+	last_portb_state = PINB; // PCINT 에지 감지를 위한 초기 상태 저장
 	sei();
+	my_delay(20);
 	
 	while(1) {
-		PORTD = ~0xAF;
-		PORTC = ~0xFA;
-		_delay_ms(500);
-		PORTD = ~0x5f;
-		PORTC = ~0xf5;
-		_delay_ms(500);
+		switch (status)
+		{
+		case SW0:
+			led_alternating(100);
+			break;
+		case SW1:
+			led_shift(100);
+			break;
+		default:
+			break;
+		}
 	}
 }
