@@ -6,138 +6,6 @@
  *  Author: junssong
  */ 
 
-
-//#include <avr/io.h>
-//#define FOCS 16000000UL
-//#define F_CPU 16000000UL
-//#include <util/delay.h>
-//#include <avr/interrupt.h>
-//
-//
-//enum e_status {
-	//PCINT0_0,
-	//PCINT0_1,
-	//PD22,
-	//PD33
-//};
-//
-//enum e_status status = PCINT0_0;
-//
-//int speed = 0;
-//
-//void my_delay(int _ms) {
-	//for (int i = 0; i < _ms; i++) {
-		//_delay_ms(1);
-	//}
-//}
-//
-//void led_alternating(int count, int _ms, int portc, int portd) {
-	//for (int i = 0 ; i < count; i++) {
-		//PORTC = portc;
-		//PORTD = portd;
-		//my_delay(_ms);
-		//PORTC = ~portc;
-		//PORTD = ~portd;
-		//my_delay(_ms);
-	//}
-//}
-//
-//ISR(PCINT0_vect)
-//{
-	//cli();
-	//PCIFR |= 0x01;
-	//sei();
-	//
-	//_delay_ms(15);
-	//
-	//unsigned char now_b = PINB;
-	//
-	//if ((now_b & 0x01) == 0) {
-		//status = PCINT0_0;
-	//}
-	//if ((now_b & 0x02) == 0) {
-		//speed++;
-		//speed %= 8;
-	//}
-//}
-//
-//ISR(INT0_vect)
-//{
-	//
-	//_delay_ms(15);
-	////if (PIND & 0x08) return;
-	//
-	//cli();
-	//EIFR |= 0x01;
-	//sei();
-	//
-	//status = PD22;
-//}
-//
-//ISR(INT1_vect)
-//{
-	//_delay_ms(15);
-	////if (PIND & 0x08) return;
-	//
-	//cli();
-	//EIFR |= 0x02;
-	//sei();
-	//
-	//status = PD33;
-//}
-//
-//int main() {
-	//DDRD = (DDRD & 0x0f) | 0xf0;
-	//DDRC = (DDRC & 0xf0) | 0x0f;
-	//
-	////DDRB &= (unsigned char)~0x03;
-	//DDRB &= (unsigned char)~0x03; //0b00000011
-	//
-	//PORTD = (PORTD & 0x0f) | 0xf0;
-	//PORTC = (PORTC & 0xf0) | 0x0f;
-	//
-	//_delay_ms(20);
-//
-//
-	//EICRA = 0x0A;
-	//EIFR  = 0x03;  //
-	//EIMSK = 0x03;
-//
-	//PCIFR  |= 0x01; //00000001
-	//PCMSK0 |= 0x03; //00000011
-	//PCICR  |= 0x01; //00000001	
-	////PCIFR  |= (1 << PCIF0); //0000 0001
-	////PCMSK0 |= (1 << PCINT0); //0000 0011
-	////PCICR  |= (1 << PCIE0); //0000 0001
-	//
-	//sei();
-	//
-	//unsigned int portc = 0xf0;
-	//unsigned int portd = 0x0f;
-	////int real_speed = 500 - (50 * speed);
-	//while(1) {
-		//switch (status)
-		//{
-			//case PD22:
-			//portc = 0xff;
-			//portd = 0xff;
-			//break;
-			//
-			//case PD33:
-			//portc = 0xfc;
-			//portd = 0xcf;
-			//break;
-			//
-			//case PCINT0_0:
-			//portc = 0xfa;
-			//portd = 0x5f;
-			//break;
-		//}
-		//led_alternating(1, 500 - (50 * speed), portc, portd);
-	//}
-//}
-
-
 #define FOCS 16000000UL     // CPU 클럭 주파수 정의 (AVR 설정에 사용)
 #define F_CPU 16000000UL    // _delay_ms() 함수 사용을 위한 CPU 클럭 정의
 #include <avr/io.h>         // AVR 입출력 레지스터 정의 포함
@@ -195,15 +63,13 @@ ISR(PCINT0_vect) {
         current_pattern_A = 0xAA;
         current_pattern_B = 0x55;
     }
-    
     // SW4 (PB1/PCINT1) 체크 - 하강 에지 감지 (주기 조절)
     if ( !(current_portb_state & (1 << PB1)) && (last_portb_state & (1 << PB1)) ) {
         // SW4 Pressed: 50ms씩 감소 (최소 100ms)
-        if (current_delay_ms > 100) {
+        if (current_delay_ms > 100)
             current_delay_ms -= 50;
-        } else {
+        else
             current_delay_ms = 500; // 100ms 이하면 500ms로 순환
-        }
     }
 
     // 다음 인터럽트 감지를 위해 현재 상태를 이전 상태로 저장
@@ -258,18 +124,17 @@ int main() {
     // 5. 전역 인터럽트 활성화 및 초기 상태 저장
     last_portb_state = PINB; // PCINT 에지 감지를 위한 초기 상태 저장
     sei();                   // 전역 인터럽트 활성화
-        
-        
+
     // 6. 메인 루프: LED 깜빡임 (Alternative) 동작
     while(1) {
         // Pattern A 출력
-        PORTD = (PORTD & 0x0F) | (current_pattern_A & 0xF0);
         PORTC = (PORTC & 0xF0) | (current_pattern_A & 0x0F);
+        PORTD = (PORTD & 0x0F) | (current_pattern_A & 0xF0);
         my_delay(current_delay_ms);
         
         // Pattern B 출력
-        PORTD = (PORTD & 0x0F) | (current_pattern_B & 0xF0);
         PORTC = (PORTC & 0xF0) | (current_pattern_B & 0x0F);
+        PORTD = (PORTD & 0x0F) | (current_pattern_B & 0xF0);
         my_delay(current_delay_ms);
     }
 }
