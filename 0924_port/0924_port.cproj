@@ -137,12 +137,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="assign3.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <None Include="PCINT.c">
+    <None Include="assign3.c">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="PCINT.c">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="assign2.c">
       <SubType>compile</SubType>
     </None>

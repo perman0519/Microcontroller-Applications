@@ -3,40 +3,40 @@
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000004  00800100  00000258  000002ec  2**0
+  0 .data         00000002  00800100  000002d8  0000036c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000258  00000000  00000000  00000094  2**1
+  1 .text         000002d8  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000001  00800104  00800104  000002f0  2**0
+  2 .bss          00000003  00800102  00800102  0000036e  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  000002f0  2**0
+  3 .comment      00000030  00000000  00000000  0000036e  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000320  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000003a0  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000040  00000000  00000000  00000360  2**0
+  5 .debug_aranges 00000050  00000000  00000000  000003e0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000080e  00000000  00000000  000003a0  2**0
+  6 .debug_info   000009a6  00000000  00000000  00000430  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000006fa  00000000  00000000  00000bae  2**0
+  7 .debug_abbrev 0000072f  00000000  00000000  00000dd6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000003b9  00000000  00000000  000012a8  2**0
+  8 .debug_line   0000049a  00000000  00000000  00001505  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000a4  00000000  00000000  00001664  2**2
+  9 .debug_frame  000000e0  00000000  00000000  000019a0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000040a  00000000  00000000  00001708  2**0
+ 10 .debug_str    00000415  00000000  00000000  00001a80  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000167  00000000  00000000  00001b12  2**0
+ 11 .debug_loc    00000317  00000000  00000000  00001e95  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000030  00000000  00000000  00001c79  2**0
+ 12 .debug_ranges 00000040  00000000  00000000  000021ac  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
 
 00000000 <__vectors>:
    0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
-   4:	0c 94 62 00 	jmp	0xc4	; 0xc4 <__vector_1>
-   8:	0c 94 74 00 	jmp	0xe8	; 0xe8 <__vector_2>
-   c:	0c 94 86 00 	jmp	0x10c	; 0x10c <__vector_3>
+   4:	0c 94 dc 00 	jmp	0x1b8	; 0x1b8 <__vector_1>
+   8:	0c 94 f9 00 	jmp	0x1f2	; 0x1f2 <__vector_2>
+   c:	0c 94 17 01 	jmp	0x22e	; 0x22e <__vector_3>
   10:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   14:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
   18:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>
@@ -72,18 +72,18 @@ Disassembly of section .text:
   74:	11 e0       	ldi	r17, 0x01	; 1
   76:	a0 e0       	ldi	r26, 0x00	; 0
   78:	b1 e0       	ldi	r27, 0x01	; 1
-  7a:	e8 e5       	ldi	r30, 0x58	; 88
+  7a:	e8 ed       	ldi	r30, 0xD8	; 216
   7c:	f2 e0       	ldi	r31, 0x02	; 2
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
-  84:	a4 30       	cpi	r26, 0x04	; 4
+  84:	a2 30       	cpi	r26, 0x02	; 2
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
 
 0000008a <__do_clear_bss>:
   8a:	21 e0       	ldi	r18, 0x01	; 1
-  8c:	a4 e0       	ldi	r26, 0x04	; 4
+  8c:	a2 e0       	ldi	r26, 0x02	; 2
   8e:	b1 e0       	ldi	r27, 0x01	; 1
   90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
 
@@ -94,16 +94,16 @@ Disassembly of section .text:
   94:	a5 30       	cpi	r26, 0x05	; 5
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
-  9a:	0e 94 c5 00 	call	0x18a	; 0x18a <main>
-  9e:	0c 94 2a 01 	jmp	0x254	; 0x254 <_exit>
+  9a:	0e 94 38 01 	call	0x270	; 0x270 <main>
+  9e:	0c 94 6a 01 	jmp	0x2d4	; 0x2d4 <_exit>
 
 000000a2 <__bad_interrupt>:
   a2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000a6 <my_delay>:
-// =======================================================
-// ISR ?? (??? ?? ??)
-// =======================================================
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 
 void my_delay(int _ms) {
 	for (int i = 0; i < _ms; i++) {
@@ -132,276 +132,392 @@ void my_delay(int _ms) {
 }
   c2:	08 95       	ret
 
-000000c4 <__vector_1>:
-// SW1 (PD2/INT0) ISR: ?? 0xF0/0x0F? ??
-ISR(INT0_vect) {
-  c4:	1f 92       	push	r1
-  c6:	0f 92       	push	r0
-  c8:	0f b6       	in	r0, 0x3f	; 63
-  ca:	0f 92       	push	r0
-  cc:	11 24       	eor	r1, r1
-  ce:	8f 93       	push	r24
-	current_pattern_A = 0xF0;
-  d0:	80 ef       	ldi	r24, 0xF0	; 240
-  d2:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <current_pattern_A>
-	current_pattern_B = 0x0F;
-  d6:	8f e0       	ldi	r24, 0x0F	; 15
-  d8:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <current_pattern_B>
-}
-  dc:	8f 91       	pop	r24
-  de:	0f 90       	pop	r0
-  e0:	0f be       	out	0x3f, r0	; 63
-  e2:	0f 90       	pop	r0
-  e4:	1f 90       	pop	r1
-  e6:	18 95       	reti
+000000c4 <led_shift>:
+};
 
-000000e8 <__vector_2>:
+volatile enum e_status status = INT0;
 
-// SW2 (PD3/INT1) ISR: ?? 0xC3/0x3C? ??
-ISR(INT1_vect) {
-  e8:	1f 92       	push	r1
-  ea:	0f 92       	push	r0
-  ec:	0f b6       	in	r0, 0x3f	; 63
-  ee:	0f 92       	push	r0
-  f0:	11 24       	eor	r1, r1
-  f2:	8f 93       	push	r24
-	current_pattern_A = 0xC3;
-  f4:	83 ec       	ldi	r24, 0xC3	; 195
-  f6:	80 93 03 01 	sts	0x0103, r24	; 0x800103 <current_pattern_A>
-	current_pattern_B = 0x3C;
-  fa:	8c e3       	ldi	r24, 0x3C	; 60
-  fc:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <current_pattern_B>
-}
- 100:	8f 91       	pop	r24
- 102:	0f 90       	pop	r0
- 104:	0f be       	out	0x3f, r0	; 63
- 106:	0f 90       	pop	r0
- 108:	1f 90       	pop	r1
- 10a:	18 95       	reti
+void led_shift(int delay)
+{
+  c4:	0f 93       	push	r16
+  c6:	1f 93       	push	r17
+  c8:	cf 93       	push	r28
+  ca:	df 93       	push	r29
+  cc:	ec 01       	movw	r28, r24
+	for (int i = 0; i < 8; i++)
+  ce:	00 e0       	ldi	r16, 0x00	; 0
+  d0:	10 e0       	ldi	r17, 0x00	; 0
+  d2:	17 c0       	rjmp	.+46     	; 0x102 <led_shift+0x3e>
+	{
+		if (status != SW1) return;
+  d4:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
+  d8:	81 30       	cpi	r24, 0x01	; 1
+  da:	c9 f5       	brne	.+114    	; 0x14e <led_shift+0x8a>
+		PORTC = (~(0x01 << i)) & 0x0f;
+  dc:	81 e0       	ldi	r24, 0x01	; 1
+  de:	90 e0       	ldi	r25, 0x00	; 0
+  e0:	00 2e       	mov	r0, r16
+  e2:	02 c0       	rjmp	.+4      	; 0xe8 <led_shift+0x24>
+  e4:	88 0f       	add	r24, r24
+  e6:	99 1f       	adc	r25, r25
+  e8:	0a 94       	dec	r0
+  ea:	e2 f7       	brpl	.-8      	; 0xe4 <led_shift+0x20>
+  ec:	80 95       	com	r24
+  ee:	98 2f       	mov	r25, r24
+  f0:	9f 70       	andi	r25, 0x0F	; 15
+  f2:	98 b9       	out	0x08, r25	; 8
+		PORTD = (~(0x01 << i)) & 0xf0;
+  f4:	80 7f       	andi	r24, 0xF0	; 240
+  f6:	8b b9       	out	0x0b, r24	; 11
+		my_delay(delay);
+  f8:	ce 01       	movw	r24, r28
+  fa:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
 
-0000010c <__vector_3>:
+volatile enum e_status status = INT0;
 
-// SW3(PB0/PCINT0) ? SW4(PB1/PCINT1) ?? ISR
-ISR(PCINT0_vect) {
- 10c:	1f 92       	push	r1
- 10e:	0f 92       	push	r0
- 110:	0f b6       	in	r0, 0x3f	; 63
- 112:	0f 92       	push	r0
- 114:	11 24       	eor	r1, r1
- 116:	2f 93       	push	r18
- 118:	3f 93       	push	r19
- 11a:	8f 93       	push	r24
- 11c:	9f 93       	push	r25
-	unsigned char current_portb_state = PINB;
- 11e:	83 b1       	in	r24, 0x03	; 3
-	
-	// 1. SW3 (PB0/PCINT0) Check - Default ?? (0xAA/0x55)
-	// ?? ?? (?? ??) ??: ?? Low(0)??, ??? High(1)? ?
-	if ( !(current_portb_state & (1 << PB0)) && (last_portb_state & (1 << PB0)) ) {
- 120:	80 fd       	sbrc	r24, 0
- 122:	0a c0       	rjmp	.+20     	; 0x138 <__vector_3+0x2c>
- 124:	90 91 04 01 	lds	r25, 0x0104	; 0x800104 <__data_end>
- 128:	90 ff       	sbrs	r25, 0
- 12a:	06 c0       	rjmp	.+12     	; 0x138 <__vector_3+0x2c>
-		// SW3 Pressed
-		current_pattern_A = 0xAA;
- 12c:	9a ea       	ldi	r25, 0xAA	; 170
- 12e:	90 93 03 01 	sts	0x0103, r25	; 0x800103 <current_pattern_A>
-		current_pattern_B = 0x55;
- 132:	95 e5       	ldi	r25, 0x55	; 85
- 134:	90 93 02 01 	sts	0x0102, r25	; 0x800102 <current_pattern_B>
+void led_shift(int delay)
+{
+	for (int i = 0; i < 8; i++)
+  fe:	0f 5f       	subi	r16, 0xFF	; 255
+ 100:	1f 4f       	sbci	r17, 0xFF	; 255
+ 102:	08 30       	cpi	r16, 0x08	; 8
+ 104:	11 05       	cpc	r17, r1
+ 106:	34 f3       	brlt	.-52     	; 0xd4 <led_shift+0x10>
+ 108:	06 e0       	ldi	r16, 0x06	; 6
+ 10a:	10 e0       	ldi	r17, 0x00	; 0
+ 10c:	17 c0       	rjmp	.+46     	; 0x13c <led_shift+0x78>
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
 	}
-	
-	// 2. SW4 (PB1/PCINT1) Check - ?? ??
-	// ?? ?? (?? ??) ??
-	if ( !(current_portb_state & (1 << PB1)) && (last_portb_state & (1 << PB1)) ) {
- 138:	81 fd       	sbrc	r24, 1
- 13a:	1c c0       	rjmp	.+56     	; 0x174 <__vector_3+0x68>
- 13c:	90 91 04 01 	lds	r25, 0x0104	; 0x800104 <__data_end>
- 140:	91 ff       	sbrs	r25, 1
- 142:	18 c0       	rjmp	.+48     	; 0x174 <__vector_3+0x68>
-		// SW4 Pressed: 50ms? ?? (?? 100ms)
-		if (current_delay_ms > 100) {
- 144:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 148:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 14c:	25 36       	cpi	r18, 0x65	; 101
- 14e:	31 05       	cpc	r19, r1
- 150:	58 f0       	brcs	.+22     	; 0x168 <__vector_3+0x5c>
-			current_delay_ms -= 50;
- 152:	20 91 00 01 	lds	r18, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 156:	30 91 01 01 	lds	r19, 0x0101	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 15a:	22 53       	subi	r18, 0x32	; 50
- 15c:	31 09       	sbc	r19, r1
- 15e:	30 93 01 01 	sts	0x0101, r19	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 162:	20 93 00 01 	sts	0x0100, r18	; 0x800100 <__DATA_REGION_ORIGIN__>
- 166:	06 c0       	rjmp	.+12     	; 0x174 <__vector_3+0x68>
-			} else {
-			current_delay_ms = 500; // 100ms ??? 500ms? ??
- 168:	24 ef       	ldi	r18, 0xF4	; 244
- 16a:	31 e0       	ldi	r19, 0x01	; 1
- 16c:	30 93 01 01 	sts	0x0101, r19	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 170:	20 93 00 01 	sts	0x0100, r18	; 0x800100 <__DATA_REGION_ORIGIN__>
-		}
+	for (int i = 6; i >= 1; i--)
+	{
+		if (status != SW1) return;
+ 10e:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
+ 112:	81 30       	cpi	r24, 0x01	; 1
+ 114:	e1 f4       	brne	.+56     	; 0x14e <led_shift+0x8a>
+		PORTC = (~(0x01 << i)) & 0x0f;
+ 116:	81 e0       	ldi	r24, 0x01	; 1
+ 118:	90 e0       	ldi	r25, 0x00	; 0
+ 11a:	00 2e       	mov	r0, r16
+ 11c:	02 c0       	rjmp	.+4      	; 0x122 <led_shift+0x5e>
+ 11e:	88 0f       	add	r24, r24
+ 120:	99 1f       	adc	r25, r25
+ 122:	0a 94       	dec	r0
+ 124:	e2 f7       	brpl	.-8      	; 0x11e <led_shift+0x5a>
+ 126:	80 95       	com	r24
+ 128:	98 2f       	mov	r25, r24
+ 12a:	9f 70       	andi	r25, 0x0F	; 15
+ 12c:	98 b9       	out	0x08, r25	; 8
+		PORTD = (~(0x01 << i)) & 0xf0;
+ 12e:	80 7f       	andi	r24, 0xF0	; 240
+ 130:	8b b9       	out	0x0b, r24	; 11
+		my_delay(delay);
+ 132:	ce 01       	movw	r24, r28
+ 134:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
+		if (status != SW1) return;
+		PORTC = (~(0x01 << i)) & 0x0f;
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
 	}
-
-	// ?? ???? ??? ?? ?? ??? ?? ??? ??
-	last_portb_state = current_portb_state;
- 174:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <__data_end>
+	for (int i = 6; i >= 1; i--)
+ 138:	01 50       	subi	r16, 0x01	; 1
+ 13a:	11 09       	sbc	r17, r1
+ 13c:	10 16       	cp	r1, r16
+ 13e:	11 06       	cpc	r1, r17
+ 140:	34 f3       	brlt	.-52     	; 0x10e <led_shift+0x4a>
+		if (status != SW1) return;
+		PORTC = (~(0x01 << i)) & 0x0f;
+		PORTD = (~(0x01 << i)) & 0xf0;
+		my_delay(delay);
+	}
+	PORTC = (PORTC & 0xf0) | 0x0f;
+ 142:	88 b1       	in	r24, 0x08	; 8
+ 144:	8f 60       	ori	r24, 0x0F	; 15
+ 146:	88 b9       	out	0x08, r24	; 8
+	PORTD = (PORTD & 0x0f) | 0xf0;
+ 148:	8b b1       	in	r24, 0x0b	; 11
+ 14a:	80 6f       	ori	r24, 0xF0	; 240
+ 14c:	8b b9       	out	0x0b, r24	; 11
 }
- 178:	9f 91       	pop	r25
- 17a:	8f 91       	pop	r24
- 17c:	3f 91       	pop	r19
- 17e:	2f 91       	pop	r18
- 180:	0f 90       	pop	r0
- 182:	0f be       	out	0x3f, r0	; 63
- 184:	0f 90       	pop	r0
- 186:	1f 90       	pop	r1
- 188:	18 95       	reti
+ 14e:	df 91       	pop	r29
+ 150:	cf 91       	pop	r28
+ 152:	1f 91       	pop	r17
+ 154:	0f 91       	pop	r16
+ 156:	08 95       	ret
 
-0000018a <main>:
-// ?? ??
-// =======================================================
-int main() {
-	// 1. DDR Setup: ??(LED) ? ??(???) ??
-	// LED ?? ??
-	DDRC = (DDRC & 0xF0) | 0x0F; // PC0-PC3 Output
- 18a:	87 b1       	in	r24, 0x07	; 7
- 18c:	8f 60       	ori	r24, 0x0F	; 15
- 18e:	87 b9       	out	0x07, r24	; 7
-	DDRD = (DDRD & 0x0F) | 0xF0; // PD4-PD7 Output
- 190:	8a b1       	in	r24, 0x0a	; 10
- 192:	80 6f       	ori	r24, 0xF0	; 240
- 194:	8a b9       	out	0x0a, r24	; 10
-	
-	// ??? ?? ??
-	DDRD &= ~((1 << PD2) | (1 << PD3)); // SW1, SW2 ??
- 196:	8a b1       	in	r24, 0x0a	; 10
- 198:	83 7f       	andi	r24, 0xF3	; 243
- 19a:	8a b9       	out	0x0a, r24	; 10
-	DDRB &= ~((1 << PB0) | (1 << PB1)); // SW3, SW4 ??
- 19c:	84 b1       	in	r24, 0x04	; 4
- 19e:	8c 7f       	andi	r24, 0xFC	; 252
- 1a0:	84 b9       	out	0x04, r24	; 4
+00000158 <led_alternating>:
 
-	// 2. PORT Setup: ?? LED ?? ? ?? ?? ???
-	// LED ?? ?? (current_pattern_A) ??
-	PORTD = (PORTD & 0x0F) | (current_pattern_A & 0xF0);
- 1a2:	9b b1       	in	r25, 0x0b	; 11
- 1a4:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <current_pattern_A>
- 1a8:	9f 70       	andi	r25, 0x0F	; 15
- 1aa:	80 7f       	andi	r24, 0xF0	; 240
- 1ac:	89 2b       	or	r24, r25
- 1ae:	8b b9       	out	0x0b, r24	; 11
-	PORTC = (PORTC & 0xF0) | (current_pattern_A & 0x0F);
- 1b0:	98 b1       	in	r25, 0x08	; 8
- 1b2:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <current_pattern_A>
- 1b6:	90 7f       	andi	r25, 0xF0	; 240
- 1b8:	8f 70       	andi	r24, 0x0F	; 15
- 1ba:	89 2b       	or	r24, r25
- 1bc:	88 b9       	out	0x08, r24	; 8
+
+
+void led_alternating(int delay) {
+ 158:	cf 93       	push	r28
+ 15a:	df 93       	push	r29
+ 15c:	ec 01       	movw	r28, r24
+	if (status != SW0) return;
+ 15e:	90 91 02 01 	lds	r25, 0x0102	; 0x800102 <__data_end>
+ 162:	91 11       	cpse	r25, r1
+ 164:	26 c0       	rjmp	.+76     	; 0x1b2 <led_alternating+0x5a>
+	PORTC = ((PORTC & 0xF0) | (current_pattern_A & 0x0F));
+ 166:	88 b1       	in	r24, 0x08	; 8
+ 168:	90 91 00 01 	lds	r25, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 16c:	80 7f       	andi	r24, 0xF0	; 240
+ 16e:	9f 70       	andi	r25, 0x0F	; 15
+ 170:	98 2b       	or	r25, r24
+ 172:	98 b9       	out	0x08, r25	; 8
+	PORTD = ((PORTD & 0x0F) | (current_pattern_A & 0xF0));
+ 174:	8b b1       	in	r24, 0x0b	; 11
+ 176:	90 91 00 01 	lds	r25, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 17a:	8f 70       	andi	r24, 0x0F	; 15
+ 17c:	90 7f       	andi	r25, 0xF0	; 240
+ 17e:	98 2b       	or	r25, r24
+ 180:	9b b9       	out	0x0b, r25	; 11
+	my_delay(delay);
+ 182:	ce 01       	movw	r24, r28
+ 184:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
+	if (status != SW0) return;
+ 188:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
+ 18c:	81 11       	cpse	r24, r1
+ 18e:	11 c0       	rjmp	.+34     	; 0x1b2 <led_alternating+0x5a>
+	PORTC = ((PORTC & 0xF0) | (current_pattern_B & 0x0F));
+ 190:	98 b1       	in	r25, 0x08	; 8
+ 192:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <current_pattern_B>
+ 196:	90 7f       	andi	r25, 0xF0	; 240
+ 198:	8f 70       	andi	r24, 0x0F	; 15
+ 19a:	89 2b       	or	r24, r25
+ 19c:	88 b9       	out	0x08, r24	; 8
+	PORTD = ((PORTD & 0x0F) | (current_pattern_B & 0xF0));
+ 19e:	9b b1       	in	r25, 0x0b	; 11
+ 1a0:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <current_pattern_B>
+ 1a4:	9f 70       	andi	r25, 0x0F	; 15
+ 1a6:	80 7f       	andi	r24, 0xF0	; 240
+ 1a8:	89 2b       	or	r24, r25
+ 1aa:	8b b9       	out	0x0b, r24	; 11
+	my_delay(delay);
+ 1ac:	ce 01       	movw	r24, r28
+ 1ae:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
+}
+ 1b2:	df 91       	pop	r29
+ 1b4:	cf 91       	pop	r28
+ 1b6:	08 95       	ret
+
+000001b8 <__vector_1>:
+
+
+ISR(INT0_vect)
+{
+ 1b8:	1f 92       	push	r1
+ 1ba:	0f 92       	push	r0
+ 1bc:	0f b6       	in	r0, 0x3f	; 63
+ 1be:	0f 92       	push	r0
+ 1c0:	11 24       	eor	r1, r1
+ 1c2:	8f 93       	push	r24
+ 1c4:	9f 93       	push	r25
+ 1c6:	8f e5       	ldi	r24, 0x5F	; 95
+ 1c8:	9a ee       	ldi	r25, 0xEA	; 234
+ 1ca:	01 97       	sbiw	r24, 0x01	; 1
+ 1cc:	f1 f7       	brne	.-4      	; 0x1ca <__vector_1+0x12>
+ 1ce:	00 c0       	rjmp	.+0      	; 0x1d0 <__vector_1+0x18>
+ 1d0:	00 00       	nop
+	_delay_ms(15);
+	if (PIND & 0x04) return;
+ 1d2:	4a 99       	sbic	0x09, 2	; 9
+ 1d4:	07 c0       	rjmp	.+14     	; 0x1e4 <__vector_1+0x2c>
 	
-	// ?? ??? ?? ?? ?? ???
-	PORTD |= (1 << PD2) | (1 << PD3);
- 1be:	8b b1       	in	r24, 0x0b	; 11
- 1c0:	8c 60       	ori	r24, 0x0C	; 12
- 1c2:	8b b9       	out	0x0b, r24	; 11
-	PORTB |= (1 << PB0) | (1 << PB1);
- 1c4:	85 b1       	in	r24, 0x05	; 5
- 1c6:	83 60       	ori	r24, 0x03	; 3
- 1c8:	85 b9       	out	0x05, r24	; 5
-	
-	
-	// 3. ?? ???? (INT0, INT1) ?? - SW1, SW2
-	EIMSK |= (1 << INT0) | (1 << INT1); // INT0, INT1 ???
- 1ca:	8d b3       	in	r24, 0x1d	; 29
- 1cc:	83 60       	ori	r24, 0x03	; 3
- 1ce:	8d bb       	out	0x1d, r24	; 29
-	
-	// ?? ??(Falling Edge) ??? ?? (ISCxx = 10)
-	EICRA |= (1 << ISC01) | (1 << ISC11);
- 1d0:	e9 e6       	ldi	r30, 0x69	; 105
- 1d2:	f0 e0       	ldi	r31, 0x00	; 0
- 1d4:	80 81       	ld	r24, Z
- 1d6:	8a 60       	ori	r24, 0x0A	; 10
- 1d8:	80 83       	st	Z, r24
-	EICRA &= ~((1 << ISC00) | (1 << ISC10));
- 1da:	80 81       	ld	r24, Z
- 1dc:	8a 7f       	andi	r24, 0xFA	; 250
- 1de:	80 83       	st	Z, r24
-	
-	
-	// 4. ? ?? ???? (PCINT0, PCINT1) ?? - SW3, SW4
-	PCICR |= (1 << PCIE0);                         // PORT B ??(PCINT0) ???
- 1e0:	e8 e6       	ldi	r30, 0x68	; 104
- 1e2:	f0 e0       	ldi	r31, 0x00	; 0
- 1e4:	80 81       	ld	r24, Z
- 1e6:	81 60       	ori	r24, 0x01	; 1
- 1e8:	80 83       	st	Z, r24
-	PCMSK0 |= (1 << PCINT0) | (1 << PCINT1);       // PB0, PB1 ? ?? ?? ??? ??
- 1ea:	eb e6       	ldi	r30, 0x6B	; 107
- 1ec:	f0 e0       	ldi	r31, 0x00	; 0
- 1ee:	80 81       	ld	r24, Z
- 1f0:	83 60       	ori	r24, 0x03	; 3
- 1f2:	80 83       	st	Z, r24
-	PCIFR |= (1 << PCIF0);                         // ?? ??? Clear
- 1f4:	8b b3       	in	r24, 0x1b	; 27
- 1f6:	81 60       	ori	r24, 0x01	; 1
- 1f8:	8b bb       	out	0x1b, r24	; 27
-	
-	
-	// 5. ?? ???? ??? ? ?? ?? ??
-	last_portb_state = PINB;
- 1fa:	83 b1       	in	r24, 0x03	; 3
- 1fc:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <__data_end>
+	cli();
+ 1d6:	f8 94       	cli
+	EIFR |= 0x01;
+ 1d8:	8c b3       	in	r24, 0x1c	; 28
+ 1da:	81 60       	ori	r24, 0x01	; 1
+ 1dc:	8c bb       	out	0x1c, r24	; 28
 	sei();
- 200:	78 94       	sei
+ 1de:	78 94       	sei
 	
+	status = SW0;
+ 1e0:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
+}
+ 1e4:	9f 91       	pop	r25
+ 1e6:	8f 91       	pop	r24
+ 1e8:	0f 90       	pop	r0
+ 1ea:	0f be       	out	0x3f, r0	; 63
+ 1ec:	0f 90       	pop	r0
+ 1ee:	1f 90       	pop	r1
+ 1f0:	18 95       	reti
+
+000001f2 <__vector_2>:
+
+ISR(INT1_vect)
+{
+ 1f2:	1f 92       	push	r1
+ 1f4:	0f 92       	push	r0
+ 1f6:	0f b6       	in	r0, 0x3f	; 63
+ 1f8:	0f 92       	push	r0
+ 1fa:	11 24       	eor	r1, r1
+ 1fc:	8f 93       	push	r24
+ 1fe:	9f 93       	push	r25
+ 200:	8f e5       	ldi	r24, 0x5F	; 95
+ 202:	9a ee       	ldi	r25, 0xEA	; 234
+ 204:	01 97       	sbiw	r24, 0x01	; 1
+ 206:	f1 f7       	brne	.-4      	; 0x204 <__vector_2+0x12>
+ 208:	00 c0       	rjmp	.+0      	; 0x20a <__vector_2+0x18>
+ 20a:	00 00       	nop
+	_delay_ms(15);
+	if (PIND & 0x08) return;
+ 20c:	4b 99       	sbic	0x09, 3	; 9
+ 20e:	08 c0       	rjmp	.+16     	; 0x220 <__vector_2+0x2e>
 	
-	// 6. ?? ??: LED ??? (Alternative) ??
+	cli();
+ 210:	f8 94       	cli
+	EIFR |= 0x01;
+ 212:	8c b3       	in	r24, 0x1c	; 28
+ 214:	81 60       	ori	r24, 0x01	; 1
+ 216:	8c bb       	out	0x1c, r24	; 28
+	sei();
+ 218:	78 94       	sei
+	
+	status = SW1;
+ 21a:	81 e0       	ldi	r24, 0x01	; 1
+ 21c:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <__data_end>
+}
+ 220:	9f 91       	pop	r25
+ 222:	8f 91       	pop	r24
+ 224:	0f 90       	pop	r0
+ 226:	0f be       	out	0x3f, r0	; 63
+ 228:	0f 90       	pop	r0
+ 22a:	1f 90       	pop	r1
+ 22c:	18 95       	reti
+
+0000022e <__vector_3>:
+
+// SW3(PB0/PCINT0) 및 SW4(PB1/PCINT1) 공통 ISR
+ISR(PCINT0_vect) {
+ 22e:	1f 92       	push	r1
+ 230:	0f 92       	push	r0
+ 232:	0f b6       	in	r0, 0x3f	; 63
+ 234:	0f 92       	push	r0
+ 236:	11 24       	eor	r1, r1
+ 238:	8f 93       	push	r24
+ 23a:	9f 93       	push	r25
+    unsigned char current_portb_state = PINB;
+ 23c:	83 b1       	in	r24, 0x03	; 3
+    
+    // SW3 (PB0/PCINT0) 체크 - 하강 에지 감지 (Default 패턴: 0xAA/0x55)
+    // 현재 Low(0)이고, 이전이 High(1)일 때 (버튼 눌림)
+    if ( !(current_portb_state & (1 << PB0)) && (last_portb_state & (1 << PB0)) ) {
+ 23e:	80 fd       	sbrc	r24, 0
+ 240:	05 c0       	rjmp	.+10     	; 0x24c <__vector_3+0x1e>
+ 242:	90 91 04 01 	lds	r25, 0x0104	; 0x800104 <last_portb_state>
+ 246:	90 fd       	sbrc	r25, 0
+        status = SW0;
+ 248:	10 92 02 01 	sts	0x0102, r1	; 0x800102 <__data_end>
+    }
+    
+    // SW4 (PB1/PCINT1) 체크 - 하강 에지 감지 (주기 조절)
+    if ( !(current_portb_state & (1 << PB1)) && (last_portb_state & (1 << PB1)) ) {
+ 24c:	81 fd       	sbrc	r24, 1
+ 24e:	07 c0       	rjmp	.+14     	; 0x25e <__vector_3+0x30>
+ 250:	90 91 04 01 	lds	r25, 0x0104	; 0x800104 <last_portb_state>
+ 254:	91 ff       	sbrs	r25, 1
+ 256:	03 c0       	rjmp	.+6      	; 0x25e <__vector_3+0x30>
+        status = SW1;
+ 258:	91 e0       	ldi	r25, 0x01	; 1
+ 25a:	90 93 02 01 	sts	0x0102, r25	; 0x800102 <__data_end>
+    }
+    // 다음 인터럽트 감지를 위해 현재 상태를 이전 상태로 저장
+    last_portb_state = current_portb_state;
+ 25e:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <last_portb_state>
+}
+ 262:	9f 91       	pop	r25
+ 264:	8f 91       	pop	r24
+ 266:	0f 90       	pop	r0
+ 268:	0f be       	out	0x3f, r0	; 63
+ 26a:	0f 90       	pop	r0
+ 26c:	1f 90       	pop	r1
+ 26e:	18 95       	reti
+
+00000270 <main>:
+
+int main() {
+	DDRC = 0x0f;
+ 270:	9f e0       	ldi	r25, 0x0F	; 15
+ 272:	97 b9       	out	0x07, r25	; 7
+	DDRD = 0xf0;
+ 274:	80 ef       	ldi	r24, 0xF0	; 240
+ 276:	8a b9       	out	0x0a, r24	; 10
+	PORTC = 0x0f;
+ 278:	98 b9       	out	0x08, r25	; 8
+	PORTD = 0xf0;
+ 27a:	8b b9       	out	0x0b, r24	; 11
+
+
+    DDRD &= ~0x0C; // 0x0C (0b00001100): SW1(PD2), SW2(PD3) 입력
+ 27c:	8a b1       	in	r24, 0x0a	; 10
+ 27e:	83 7f       	andi	r24, 0xF3	; 243
+ 280:	8a b9       	out	0x0a, r24	; 10
+    DDRB &= ~0x03; // 0x03 (0b00000011): SW3(PB0), SW4(PB1) 입력
+ 282:	84 b1       	in	r24, 0x04	; 4
+ 284:	8c 7f       	andi	r24, 0xFC	; 252
+ 286:	84 b9       	out	0x04, r24	; 4
+
+    PORTD |= 0x0C; // 0x0C: SW1(PD2), SW2(PD3) 풀업 활성화
+ 288:	8b b1       	in	r24, 0x0b	; 11
+ 28a:	8c 60       	ori	r24, 0x0C	; 12
+ 28c:	8b b9       	out	0x0b, r24	; 11
+    PORTB |= 0x03; // 0x03: SW3(PB0), SW4(PB1) 풀업 활성화
+ 28e:	85 b1       	in	r24, 0x05	; 5
+ 290:	83 60       	ori	r24, 0x03	; 3
+ 292:	85 b9       	out	0x05, r24	; 5
+	// EIMSK = 0x03; // 0000 0011
+
+
+    // 4. 핀 변화 인터럽트 (PCINT0, PCINT1) 설정 - SW3, SW4
+    // 0x01 (0b00000001): PCIE0 비트 설정 -> PORT B 그룹 활성화
+    PCICR = 0x01;
+ 294:	81 e0       	ldi	r24, 0x01	; 1
+ 296:	80 93 68 00 	sts	0x0068, r24	; 0x800068 <__TEXT_REGION_LENGTH__+0x7f8068>
+    // 0x03 (0b00000011): PB0, PB1 핀 변화 감지 마스크 설정
+    PCMSK0 = 0x03;
+ 29a:	93 e0       	ldi	r25, 0x03	; 3
+ 29c:	90 93 6b 00 	sts	0x006B, r25	; 0x80006b <__TEXT_REGION_LENGTH__+0x7f806b>
+    // 0x01 (0b00000001): PCIF0 플래그 Clear (초기 오동작 방지)
+    PCIFR = 0x01;
+ 2a0:	8b bb       	out	0x1b, r24	; 27
+
+	last_portb_state = PINB; // PCINT 에지 감지를 위한 초기 상태 저장
+ 2a2:	83 b1       	in	r24, 0x03	; 3
+ 2a4:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <last_portb_state>
+	sei();
+ 2a8:	78 94       	sei
+	my_delay(20);
+ 2aa:	84 e1       	ldi	r24, 0x14	; 20
+ 2ac:	90 e0       	ldi	r25, 0x00	; 0
+ 2ae:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
+	
 	while(1) {
-		// Pattern A ??
-		PORTD = (PORTD & 0x0F) | (current_pattern_A & 0xF0);
- 202:	9b b1       	in	r25, 0x0b	; 11
- 204:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <current_pattern_A>
- 208:	9f 70       	andi	r25, 0x0F	; 15
- 20a:	80 7f       	andi	r24, 0xF0	; 240
- 20c:	89 2b       	or	r24, r25
- 20e:	8b b9       	out	0x0b, r24	; 11
-		PORTC = (PORTC & 0xF0) | (current_pattern_A & 0x0F);
- 210:	98 b1       	in	r25, 0x08	; 8
- 212:	80 91 03 01 	lds	r24, 0x0103	; 0x800103 <current_pattern_A>
- 216:	90 7f       	andi	r25, 0xF0	; 240
- 218:	8f 70       	andi	r24, 0x0F	; 15
- 21a:	89 2b       	or	r24, r25
- 21c:	88 b9       	out	0x08, r24	; 8
-		my_delay(current_delay_ms);
- 21e:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 222:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 226:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
-		
-		// Pattern B ??
-		PORTD = (PORTD & 0x0F) | (current_pattern_B & 0xF0);
- 22a:	9b b1       	in	r25, 0x0b	; 11
- 22c:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <current_pattern_B>
- 230:	9f 70       	andi	r25, 0x0F	; 15
- 232:	80 7f       	andi	r24, 0xF0	; 240
- 234:	89 2b       	or	r24, r25
- 236:	8b b9       	out	0x0b, r24	; 11
-		PORTC = (PORTC & 0xF0) | (current_pattern_B & 0x0F);
- 238:	98 b1       	in	r25, 0x08	; 8
- 23a:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <current_pattern_B>
- 23e:	90 7f       	andi	r25, 0xF0	; 240
- 240:	8f 70       	andi	r24, 0x0F	; 15
- 242:	89 2b       	or	r24, r25
- 244:	88 b9       	out	0x08, r24	; 8
-		my_delay(current_delay_ms);
- 246:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 24a:	90 91 01 01 	lds	r25, 0x0101	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 24e:	0e 94 53 00 	call	0xa6	; 0xa6 <my_delay>
- 252:	d7 cf       	rjmp	.-82     	; 0x202 <main+0x78>
+		switch (status)
+ 2b2:	80 91 02 01 	lds	r24, 0x0102	; 0x800102 <__data_end>
+ 2b6:	88 23       	and	r24, r24
+ 2b8:	19 f0       	breq	.+6      	; 0x2c0 <main+0x50>
+ 2ba:	81 30       	cpi	r24, 0x01	; 1
+ 2bc:	31 f0       	breq	.+12     	; 0x2ca <main+0x5a>
+ 2be:	f9 cf       	rjmp	.-14     	; 0x2b2 <main+0x42>
+		{
+		case SW0:
+			led_alternating(100);
+ 2c0:	84 e6       	ldi	r24, 0x64	; 100
+ 2c2:	90 e0       	ldi	r25, 0x00	; 0
+ 2c4:	0e 94 ac 00 	call	0x158	; 0x158 <led_alternating>
+			break;
+ 2c8:	f4 cf       	rjmp	.-24     	; 0x2b2 <main+0x42>
+		case SW1:
+			led_shift(100);
+ 2ca:	84 e6       	ldi	r24, 0x64	; 100
+ 2cc:	90 e0       	ldi	r25, 0x00	; 0
+ 2ce:	0e 94 62 00 	call	0xc4	; 0xc4 <led_shift>
+			break;
+ 2d2:	ef cf       	rjmp	.-34     	; 0x2b2 <main+0x42>
 
-00000254 <_exit>:
- 254:	f8 94       	cli
+000002d4 <_exit>:
+ 2d4:	f8 94       	cli
 
-00000256 <__stop_program>:
- 256:	ff cf       	rjmp	.-2      	; 0x256 <__stop_program>
+000002d6 <__stop_program>:
+ 2d6:	ff cf       	rjmp	.-2      	; 0x2d6 <__stop_program>
